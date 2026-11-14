@@ -13,11 +13,11 @@
 [hidden]{display:none!important}
 html,body{margin:0;min-height:100%;font-family:"Segoe UI",system-ui,-apple-system,Roboto,Arial,sans-serif;color:var(--ink);
   background:radial-gradient(900px 600px at 12% 8%,rgba(255,61,139,.38),transparent 60%),radial-gradient(900px 700px at 92% 92%,rgba(39,216,255,.30),transparent 60%),linear-gradient(160deg,var(--bg1),var(--bg2) 52%,var(--bg3));
-  background-attachment:fixed}
+  background-attachment:scroll}
 body{overflow-x:hidden}
-#rays{position:fixed;inset:-40%;z-index:0;pointer-events:none;opacity:.16;
+#rays{position:fixed;inset:-40%;z-index:0;pointer-events:none;opacity:.11;
   background:repeating-conic-gradient(from 0deg at 50% 50%,rgba(255,255,255,.9) 0 4deg,transparent 4deg 18deg);
-  animation:spin 90s linear infinite;mask-image:radial-gradient(circle,#000 0,transparent 62%);-webkit-mask-image:radial-gradient(circle,#000 0,transparent 62%)}
+  animation:none;mask-image:radial-gradient(circle,#000 0,transparent 62%);-webkit-mask-image:radial-gradient(circle,#000 0,transparent 62%)}
 @keyframes spin{to{transform:rotate(360deg)}}
 #bg{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
 #bg span{position:absolute;bottom:-60px;font-weight:800;color:rgba(255,255,255,.10);animation:rise linear infinite;user-select:none}
@@ -48,8 +48,8 @@ h2{margin:0 0 10px;font-size:20px}
 .btn.sec:hover{background:rgba(255,255,255,.18)}
 .btn.go{background:linear-gradient(180deg,#59f0a4,#17b36a);box-shadow:0 5px 0 #0b7a45,0 10px 20px rgba(0,0,0,.3);color:#04301b}
 .btn.big{font-size:22px;padding:16px 30px;min-height:58px;border-radius:18px}
-.btn.pulse{animation:pulse 1.4s ease-in-out infinite}
-@keyframes pulse{50%{transform:scale(1.05);filter:brightness(1.1)}}
+.btn.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{transform:scale(1.03)}}
 .btn[disabled]{opacity:.4;pointer-events:none}
 .btn.sm{padding:6px 12px;min-height:34px;font-size:13px;border-radius:10px;box-shadow:none}
 input,textarea,select{font:inherit;color:#fff;background:rgba(10,0,50,.55);border:1px solid var(--line);border-radius:10px;padding:8px 10px;outline:none}
@@ -121,7 +121,7 @@ label.chk input{width:18px;height:18px;margin-top:2px}
 .timer .bgc{fill:rgba(0,0,0,.3);stroke:rgba(255,255,255,.18);stroke-width:8}
 .timer .fg{fill:none;stroke:url(#gTimer);stroke-width:8;stroke-linecap:round;transition:stroke-dashoffset .1s linear}
 .timer .num{position:absolute;inset:0;display:grid;place-items:center;font-size:34px;font-weight:900}
-.timer.warn .num{color:var(--bad);animation:pulse .5s infinite}
+.timer.warn .num{color:var(--bad)}
 .timer.paused .num{opacity:.5}
 .gmain{display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px}
 @media(max-width:1000px){.gmain{grid-template-columns:1fr}}
@@ -239,6 +239,26 @@ body.chup #bg span{display:none}
 @media(max-width:700px){.how{grid-template-columns:1fr}}
 .how div{padding:14px;border-radius:16px;background:rgba(255,255,255,.08);border:1px solid var(--line);text-align:center;font-size:15px;line-height:1.4}
 .how b{display:block;font-size:34px;margin-bottom:2px}
+
+/* Màn điện thoại học sinh: không hiệu ứng nền, không làm mờ kính (tránh nháy hình, đỡ nóng máy) */
+body.hs #rays,body.hs #bg{display:none}
+body.hs *,body.hs *::before,body.hs *::after{backdrop-filter:none!important;-webkit-backdrop-filter:none!important}
+body.hs .pad,body.hs .chip,body.hs .stcard{animation:none!important}
+
+/* Không còn chuyển động lặp vô hạn nào (chữ trôi, dấu chấm nháy, logo nhún, nút nhịp tim) — dịu mắt khi chiếu lâu */
+#bg{display:none!important}
+.dots::after{content:'…'!important;animation:none!important}
+.brand svg{animation:none!important}
+.btn.pulse{animation:none!important;box-shadow:0 5px 0 #b76d00,0 0 0 4px rgba(255,226,122,.5),0 10px 20px rgba(0,0,0,.3)}
+.btn.go.pulse{box-shadow:0 5px 0 #0b7a45,0 0 0 4px rgba(89,240,164,.5),0 10px 20px rgba(0,0,0,.3)}
+
+/* khung câu hỏi: nội dung chảy liền như một đoạn văn (trước đây mỗi mẩu chữ/công thức bị xếp thành một dòng riêng) */
+.qcard .qin{width:100%;text-align:center;line-height:1.7}
+.qcard .qin .katex-display{margin:.5em 0}
+.qcard .qin .lxlist{display:inline-block}
+.modal .box.wide{width:min(1100px,100%)}
+.modal .box .qcard{min-height:110px;padding:14px 18px}
+.modal .box .opt{min-height:64px}
 </style></head><body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
   <linearGradient id="gGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ffe27a"/><stop offset="1" stop-color="#ff9f1c"/></linearGradient>
@@ -265,12 +285,12 @@ body.chup #bg span{display:none}
 <div id="rays"></div><div id="bg"></div>
 <div id="ribbon" hidden>DỮ LIỆU THỬ</div>
 <canvas id="confetti"></canvas>
-<div id="nhap">✅ BẢN NHÁP — thầy/cô duyệt trước khi dùng</div>
+<!-- ✅ BẢN NHÁP — thầy/cô duyệt trước khi dùng (ghi chú trong mã nguồn; cô Thảo đã yêu cầu không hiện trên màn hình) -->
 
 <!-- ================= MÀN THẦY CÔ ================= -->
 <section class="screen" id="s-setup">
   <div class="head">
-    <div class="brand"><svg><use href="#logo"/></svg><div><h1 class="logo">ĐẤU TRƯỜNG TOÁN</h1><p class="sub">Game thi đua theo đội · đề LaTeX · dành cho học sinh THPT</p></div></div>
+    <div class="brand"><svg><use href="#logo"/></svg><div><h1 class="logo">ĐẤU TRƯỜNG TOÁN</h1><p class="sub">Game thi đua theo đội · đề LaTeX · dành cho học sinh THPT <span style="opacity:.5;font-size:12px">· bản 14.11.c</span></p></div></div>
     <div class="row"><button class="btn sec sm" id="b-mute" title="Bật/tắt toàn bộ âm thanh">🔊 Âm thanh</button><button class="btn sec sm" id="b-help">❓ Hướng dẫn</button></div>
   </div>
   <div class="setup">
@@ -282,6 +302,7 @@ body.chup #bg span{display:none}
         <div class="row" style="justify-content:center;margin-top:8px">
           <button class="btn sm" id="b-file">📂 Chọn file</button>
           <button class="btn sec sm" id="b-sample">✨ Dùng đề mẫu</button>
+          <button class="btn sm" id="b-prev" title="Xem từng câu đúng như lúc chơi, có đáp án và lời giải">👁 Xem trước toàn bộ đề</button>
           <button class="btn sec sm" id="b-save" title="Lưu đề đã chỉnh (đáp án, thời gian, lời giải) ra file để mang sang máy khác">💾 Lưu đề đã chuẩn bị</button>
           <button class="btn sec sm" id="b-clear">🗑️ Xoá đề</button>
         </div>
@@ -404,7 +425,7 @@ body.chup #bg span{display:none}
   <div class="brand"><svg><use href="#logo"/></svg><h1 class="logo">ĐẤU TRƯỜNG TOÁN</h1></div>
   <div class="stcard"><svg viewBox="0 0 120 130" style="width:110px"><use href="#mascot"/></svg>
     <h2 id="conn-t">Đang kết nối vào phòng<span class="dots"></span></h2>
-    <div class="mut" id="conn-s">Mã phòng: <b id="conn-room"></b></div>
+    <div class="mut" id="conn-s">Mã phòng: <b id="conn-room"></b></div><div class="mut" style="font-size:11px;opacity:.55;margin-top:6px">bản 14.11.c</div>
     <div id="conn-form" hidden style="margin-top:10px"><input class="big-in" id="roomIn" placeholder="Nhập mã phòng" maxlength="8" style="text-transform:lowercase"><button class="btn" id="b-conn" style="margin-top:10px;width:100%">Vào phòng</button></div>
     <button class="btn sec" id="b-retry" hidden style="margin-top:10px">🔄 Thử lại</button>
   </div>
@@ -596,6 +617,7 @@ const LX = (function () {
     '\\Oxyz': 'Oxyz', '\\Oxy': 'Oxy', '\\Ox': 'Ox', '\\Oy': 'Oy', '\\Oz': 'Oz',
     '\\tg': '\\operatorname{tg}', '\\cotg': '\\operatorname{cotg}', '\\arctg': '\\operatorname{arctg}',
     '\\vecto': '\\overrightarrow{#1}', '\\Hom': '\\operatorname{Hom}',
+    '\\dx': '\\,\\mathrm{d}x', '\\dy': '\\,\\mathrm{d}y', '\\dz': '\\,\\mathrm{d}z', '\\dt': '\\,\\mathrm{d}t', '\\du': '\\,\\mathrm{d}u', '\\dv': '\\,\\mathrm{d}v',
     '\\Z': '\\mathbb{Z}', '\\N': '\\mathbb{N}', '\\Q': '\\mathbb{Q}', '\\R': '\\mathbb{R}', '\\C': '\\mathbb{C}'
   };
   const FIG = '<span class="lxfig" title="Game không hiển thị được hình vẽ này">🖼️ hình vẽ</span>';
@@ -774,8 +796,10 @@ const LX = (function () {
 
   const clean = src => String(src || '').replace(/(^|[^\\])%.*$/gm, '$1');
   function render(src) { return T(clean(src)); }
-  function addMacros(o) { Object.assign(MACROS, o); }
-  return { render, grab, grabOpt, skipWs, matchEnd, splitItems, clean, addMacros, esc, mathHtml, MACROS };
+  const CUSTOM = {};
+  function addMacros(o) { Object.assign(MACROS, o); Object.assign(CUSTOM, o); }
+  const custom = () => Object.assign({}, CUSTOM);
+  return { custom, render, grab, grabOpt, skipWs, matchEnd, splitItems, clean, addMacros, esc, mathHtml, MACROS };
 })();
 
 const Parse = (function () {
@@ -1140,8 +1164,8 @@ let S = Object.assign({}, DEF), Q = [], G = null, NETH = null, CAPTURE = false;
 const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
 const wait = ms => new Promise(r => setTimeout(r, ms));
 
-function save() { try { localStorage.setItem('dtt.v1', JSON.stringify({ S: S, Q: Q })); } catch (e) { /* trình duyệt chặn lưu: bỏ qua */ } }
-function loadSaved() { try { const d = JSON.parse(localStorage.getItem('dtt.v1') || 'null'); if (d) { Object.assign(S, d.S || {}); Q = Array.isArray(d.Q) ? d.Q : []; } } catch (e) { /* bỏ qua */ } }
+function save() { try { localStorage.setItem('dtt.v1', JSON.stringify({ S: S, Q: Q, M: LX.custom() })); } catch (e) { /* trình duyệt chặn lưu: bỏ qua */ } }
+function loadSaved() { try { const d = JSON.parse(localStorage.getItem('dtt.v1') || 'null'); if (d) { Object.assign(S, d.S || {}); Q = Array.isArray(d.Q) ? d.Q : []; LX.addMacros(d.M || {}); } } catch (e) { /* bỏ qua */ } }
 function show(id) { $$('.screen,.st').forEach(e => e.classList.toggle('on', e.id === id)); window.scrollTo(0, 0); }
 let toastT = null;
 function toast(msg, ms) {
@@ -1211,7 +1235,7 @@ async function readFile(f) {
 function savePrepared() {
   if (!Q.length) { toast('Chưa có đề để lưu'); return; }
   readSettings();
-  const d = { dttDe: 1, Q: Q, S: { tDefault: S.tDefault, base: S.base, speed: S.speed, streak: S.streak, teamMode: S.teamMode, suspense: S.suspense, autoLock: S.autoLock, showPhone: S.showPhone } };
+  const d = { dttDe: 1, Q: Q, M: LX.custom(), S: { tDefault: S.tDefault, base: S.base, speed: S.speed, streak: S.streak, teamMode: S.teamMode, suspense: S.suspense, autoLock: S.autoLock, showPhone: S.showPhone } };
   const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([JSON.stringify(d)], { type: 'application/json' }));
   a.download = 'de-da-chuan-bi.dtt.json'; document.body.appendChild(a); a.click(); a.remove(); toast('Đã lưu file de-da-chuan-bi.dtt.json');
 }
@@ -1220,7 +1244,7 @@ function loadPrepared(text) {
     const d = JSON.parse(text);
     if (!Array.isArray(d.Q) || !d.Q.every(q => q && typeof q.stem === 'string' && Array.isArray(q.opts) && q.opts.length === 4)) throw new Error('sai dạng');
     Q = d.Q.map(q => ({ stem: q.stem, opts: q.opts.map(String), ans: Number.isInteger(q.ans) ? q.ans : -1, sol: q.sol || '', time: q.time || null }));
-    Object.assign(S, d.S || {}); save(); fillSettings(); setMode(S.mode); $('#warns').hidden = true; renderList(); Snd.play('reveal'); toast('Đã mở đề đã chuẩn bị: ' + Q.length + ' câu');
+    LX.addMacros(d.M || {}); Object.assign(S, d.S || {}); save(); fillSettings(); setMode(S.mode); $('#warns').hidden = true; renderList(); Snd.play('reveal'); toast('Đã mở đề đã chuẩn bị: ' + Q.length + ' câu');
   } catch (e) { toast('File đề đã lưu không đọc được.'); }
 }
 function clipboardLink(v) {
@@ -1229,6 +1253,7 @@ function clipboardLink(v) {
 
 /* ----- hộp sửa câu ----- */
 function openEdit(i) {
+  if (i !== -1 && !Q[i]) { $('#modal').classList.remove('on'); return; }   // câu đã bị xoá: không mở hộp sửa
   const q = i === -1 ? { stem: '', opts: ['', '', '', ''], ans: 0, sol: '', time: null } : JSON.parse(JSON.stringify(Q[i]));
   const box = $('#mbox');
   box.innerHTML = '<h2>' + (i === -1 ? 'Thêm câu mới' : 'Sửa câu ' + (i + 1)) + '</h2>' +
@@ -1382,6 +1407,7 @@ function rankList() {
 function vmFor(p) {
   const t = G.teams.get(p.team), q = Q[G.qi];
   const vm = { t: 'vm', phase: G.phase, team: pub(t), teams: teamList(), qi: G.qi, n: Q.length, code: G.code };
+  const mac = LX.custom(); if (Object.keys(mac).length) vm.mac = mac;
   if (q && (G.phase === 'q' || G.phase === 'lock' || G.phase === 'reveal' || G.phase === 'rank')) {
     vm.stem = S.showPhone ? q.stem : null; vm.opts = S.showPhone ? q.opts : null;
     vm.ms = Math.round(G.left); vm.tot = Math.round(G.total); vm.paused = G.paused; vm.mine = p.ans ? p.ans.opt : -1;
@@ -1509,7 +1535,7 @@ function endGame() {
 function fitSize(len) { return len < 60 ? 36 : len < 120 ? 31 : len < 220 ? 26 : len < 400 ? 22 : 19; }
 function renderQuestion() {
   const q = Q[G.qi]; $('#gq').textContent = 'Câu ' + (G.qi + 1) + '/' + Q.length;
-  const qc = $('#qcard'); qc.style.setProperty('--fs', fitSize(q.stem.length) + 'px'); qc.innerHTML = LX.render(q.stem);
+  const qc = $('#qcard'); qc.style.setProperty('--fs', fitSize(q.stem.length) + 'px'); qc.innerHTML = '<div class="qin">' + LX.render(q.stem) + '</div>';
   const mx = Math.max.apply(null, q.opts.map(o => o.length)), fo = mx < 20 ? 28 : mx < 50 ? 23 : 19;
   const ob = $('#opts'); ob.innerHTML = '';
   q.opts.forEach((o, i) => {
@@ -1674,6 +1700,26 @@ function backToSetup() {
   if (G) { clearInterval(G.tm); } G = null; Snd.music(''); show('s-setup'); renderList();
 }
 
+
+/* ----- xem trước toàn bộ đề: hiện đúng như lúc chơi, có đáp án và lời giải ----- */
+let PV = -1;
+function openPreview(i) {
+  if (!Q.length) { toast('Chưa có đề để xem trước'); return; }
+  i = clamp(i, 0, Q.length - 1); const q = Q[i], box = $('#mbox');
+  const mx = Math.max.apply(null, q.opts.map(o => o.length)), fo = mx < 20 ? 26 : mx < 50 ? 22 : 18;
+  box.classList.add('wide');
+  box.innerHTML = '<div class="row" style="justify-content:space-between"><h2 style="margin:0">👁 Xem trước · câu ' + (i + 1) + '/' + Q.length + '</h2><span class="row"><button class="btn sec sm" id="pvE">✏️ Sửa câu này</button><button class="btn sec sm" id="pvX">✕ Đóng</button></span></div>' +
+    '<div class="qcard" style="--fs:' + Math.min(30, fitSize(q.stem.length)) + 'px;margin-top:10px"><div class="qin">' + LX.render(q.stem) + '</div></div>' +
+    '<div class="opts">' + q.opts.map((o, k) => '<div class="opt ' + LETTERS[k] + (q.ans === k ? ' right' : '') + '" style="--fo:' + fo + 'px"><div class="lt">' + LETTERS[k] + '</div><div class="tx">' + LX.render(o) + '</div></div>').join('') + '</div>' +
+    '<div class="row" style="margin:12px 0 6px"><span class="tag" style="background:var(--ok);color:#03301b">Đáp án đúng: ' + (q.ans >= 0 ? LETTERS[q.ans] : 'chưa có') + '</span><span class="tag" style="background:rgba(255,255,255,.18)">⏱ ' + (q.time || S.tDefault) + ' giây</span></div>' +
+    '<div class="pv"><b>Lời giải:</b> ' + (q.sol ? LX.render(q.sol) : '<i>(chưa có lời giải)</i>') + '</div>' +
+    '<div class="row" style="justify-content:space-between;margin-top:8px"><button class="btn sec" id="pvP"' + (i === 0 ? ' disabled' : '') + '>◀ Câu trước</button><span class="mut">Dùng phím ← → để chuyển câu</span><button class="btn" id="pvN"' + (i === Q.length - 1 ? ' disabled' : '') + '>Câu sau ▶</button></div>';
+  $('#pvX').onclick = closePreview; $('#pvP').onclick = () => openPreview(i - 1); $('#pvN').onclick = () => openPreview(i + 1);
+  $('#pvE').onclick = () => { closePreview(); openEdit(i); };
+  $('#modal').classList.add('on'); PV = i;
+}
+function closePreview() { PV = -1; $('#mbox').classList.remove('wide'); $('#modal').classList.remove('on'); }
+
 /* ===== MÀN ĐIỆN THOẠI HỌC SINH (chỉ có trong bản nối mạng) ===== */
 const ST = { room: '', dev: '', b: 0, ch: null, conn: null, heard: false, connecting: false, lostN: 0, tried: 0, ans: null, helloT: null, vm: null, endAt: 0, tot: 30000, paused: false, pausedMs: 0, tick: null, tries: 0, teams: [] };
 
@@ -1688,6 +1734,7 @@ function stMem(key, val) {
   return null;
 }
 function studentInit(room) {
+  document.body.classList.add('hs');
   ST.room = String(room || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const bp = parseInt(new URLSearchParams(location.search).get('b'), 10); ST.b = bp >= 0 && bp < Net.count ? bp : 0;
   let d = stMem('dtt.dev'); if (!d) { d = Net.rnd(10); stMem('dtt.dev', d); } ST.dev = d;
@@ -1756,6 +1803,7 @@ function stOnMsg(m) {
     const t = stMem('dtt.team.' + ST.room); if (ST.ch) ST.ch.send({ t: 'hello', team: t || null });
   } else if (m.t === 'vm') {
     if (ST.ans && ST.ans.q === m.qi) { if (m.mine >= 0) ST.ans.acked = true; else if (!ST.ans.acked && m.phase === 'q') m.mine = ST.ans.o; }
+    if (m.mac) LX.addMacros(m.mac);
     const was = ST.vm; ST.vm = m; stMem('dtt.team.' + ST.room, { id: m.team.id, name: m.team.name });
     if (m.phase === 'q' || m.phase === 'lock') { ST.endAt = performance.now() + m.ms; ST.tot = m.tot || 30000; ST.paused = !!m.paused; ST.pausedMs = m.ms; }
     stRender(m, was);
@@ -1870,7 +1918,7 @@ function hostInit() {
   drop.addEventListener('drop', e => { const f = e.dataTransfer && e.dataTransfer.files[0]; if (f) readFile(f); });
   $('#b-file').onclick = () => $('#file').click(); $('#file').onchange = e => { readFile(e.target.files[0]); e.target.value = ''; };
   $('#b-sample').onclick = () => { doParse(SAMPLE_TEX); };
-  $('#b-save').onclick = savePrepared;
+  $('#b-save').onclick = savePrepared; $('#b-prev').onclick = () => openPreview(0);
   $('#b-clear').onclick = () => { if (!Q.length || confirm('Xoá toàn bộ đề đang nạp?')) { Q = []; save(); $('#warns').hidden = true; renderList(); } };
   $('#b-parse').onclick = () => { const v = $('#paste').value; if (v.trim()) doParse(v); else toast('Sếp dán nội dung LaTeX vào ô trước nhé'); };
   $('#b-allT').onclick = () => { const v = clamp(parseInt($('#allT').value, 10) || 30, 5, 600); Q.forEach(q => { q.time = v; }); S.tDefault = v; $('#sT').value = v; save(); renderList(); toast('Đã đặt ' + v + ' giây cho tất cả các câu'); };
@@ -1899,9 +1947,10 @@ function hostInit() {
     Snd.play('click'); renderSide();
   });
   $('#e-csv').onclick = exportCSV; $('#e-all').onclick = showAllRank; $('#e-again').onclick = backToSetup;
-  $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') $('#modal').classList.remove('on'); });
+  $('#modal').addEventListener('click', e => { if (e.target.id === 'modal') { if (PV >= 0) closePreview(); else $('#modal').classList.remove('on'); } });
   document.addEventListener('pointerdown', () => Snd.unlock(), { once: true });
   document.addEventListener('keydown', e => {
+    if (PV >= 0 && $('#modal').classList.contains('on')) { if (e.key === 'ArrowRight') openPreview(PV + 1); else if (e.key === 'ArrowLeft') openPreview(PV - 1); else if (e.key === 'Escape') closePreview(); return; }
     if (!G || !$('#s-game').classList.contains('on') || /INPUT|TEXTAREA|SELECT/.test((e.target.tagName || ''))) return;
     if (e.code === 'Space' || e.code === 'Enter') { e.preventDefault(); nextStep(); }
     else if (e.code === 'KeyP') togglePause(); else if (e.code === 'KeyS') $('#c-sol').click(); else if (e.code === 'KeyM') toggleMute();
@@ -1926,6 +1975,7 @@ function demoGame(withPlayers) {
 function demo(h) {
   CAPTURE = true; document.body.classList.add('chup'); $('#ribbon').hidden = false; Snd.setMuted(true);
   const name = h.split('&')[0];
+  if (name === 'demo-xemtruoc') { Q = Parse.exam(SAMPLE_TEX).questions; fillSettings(); setMode('online'); renderList(); show('s-setup'); openPreview(2); return; }
   if (name === 'demo-chuanbi') { fillSettings(); Q = Parse.exam(SAMPLE_TEX).questions; setMode('online'); showWarns({ questions: Q, warnings: [], style: 'ex_test (\\begin{ex} … \\choice)' }); renderList(); show('s-setup'); return; }
   if (name.indexOf('demo-hs') === 0) { if (typeof stDemo === 'function') stDemo(name); return; }
   demoGame(true);
